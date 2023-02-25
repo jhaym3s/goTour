@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"io"
 	"strings"
 )
@@ -26,4 +27,5 @@ b[:n] = "eader!"
 n = 0 err = EOF b = [101 97 100 101 114 33 32 82]
 b[:n] = ""
 	*/
+
 }
