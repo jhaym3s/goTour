@@ -2,67 +2,28 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"io"
+	"strings"
 )
 
-type Abser interface {
-	Abs() float64
-}
-//type switch cases 
-func do(i interface{}) {
-	switch v := i.(type) {
-	case int:
-		fmt.Printf("Twice %v is %v\n", v, v*2)
-	case string:
-		fmt.Printf("%q is %v bytes long\n", v, len(v))
-	default:
-		fmt.Printf("I don't know about type %T!\n", v)
-	}
-}
-
 func main() {
-	var a Abser
-	f := MyFloat(-math.Sqrt2)
-	v := Vertex{3, 4}
-
-	a = f  // a MyFloat implements Abser
-	a = &v // a *Vertex implements Abser
-
-	// In the following line, v is a Vertex (not *Vertex)
-	// and does NOT implement Abser.
-	//a = v
-
-	fmt.Println(a.Abs())
-
-	var i interface{} = "hello"
-
-	s := i.(string)
-	fmt.Println(s)
-
-	//If i holds a T, then t will be the underlying value and ok will be true.
-	s, ok := i.(string)
-	fmt.Println(s, ok)
-
-	w, ok := i.(float64)
-	fmt.Println(w, ok)
-
-	w = i.(float64) // panic
-	fmt.Println(w)
-}
-
-type MyFloat float64
-
-func (f MyFloat) Abs() float64 {
-	if f < 0 {
-		return float64(-f)
+	r := strings.NewReader("Hello, Reader!")
+	b := make([]byte, 8)
+	for {
+		n, err := r.Read(b)
+		fmt.Printf("n = %v err = %v b = %v\n", n, err, b)
+		fmt.Printf("b[:n] = %q\n", b[:n])
+		if err == io.EOF {
+			break
+		}
 	}
-	return float64(f)
-}
 
-type Vertex struct {
-	X, Y float64
-}
-
-func (v *Vertex) Abs() float64 {
-	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+	/* below is the result when ran 
+n = 8 err = <nil> b = [72 101 108 108 111 44 32 82]
+b[:n] = "Hello, R"
+n = 6 err = <nil> b = [101 97 100 101 114 33 32 82]
+b[:n] = "eader!"
+n = 0 err = EOF b = [101 97 100 101 114 33 32 82]
+b[:n] = ""
+	*/
 }
