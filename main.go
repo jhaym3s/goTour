@@ -2,35 +2,30 @@ package main
 
 import (
 	"fmt"
-	"math"
+
+	"io"
+	"strings"
 )
 
-type Vertex struct {
-	X, Y float64
-}
-
-func (v Vertex) Abs() float64 {
-	return math.Sqrt(v.X*v.X + v.Y*v.Y)
-}
-
-func (v *Vertex) Scale(f float64) {
-	v.X = v.X * f
-	v.Y = v.Y * f
-}
-
-func Scale(v *Vertex, f float64) {
-	v.X = v.X * f
-	v.Y = v.Y * f
-}
-
 func main() {
-	v := Vertex{3, 4}
-	fmt.Println(v.Abs(), "first abs")
-	v.Scale(10)
-	fmt.Println(v.Abs(),"second abs")
-	q := &Vertex{3, 4} // this is a pointer to vertex
-	Scale(q, 10) // function scale 
-	fmt.Println(q.Abs(),"third abs")
+	r := strings.NewReader("Hello, Reader!")
+	b := make([]byte, 8)
+	for {
+		n, err := r.Read(b)
+		fmt.Printf("n = %v err = %v b = %v\n", n, err, b)
+		fmt.Printf("b[:n] = %q\n", b[:n])
+		if err == io.EOF {
+			break
+		}
+	}
 
-	// when using a method you can use &q or just q and it works 
+	/* below is the result when ran 
+n = 8 err = <nil> b = [72 101 108 108 111 44 32 82]
+b[:n] = "Hello, R"
+n = 6 err = <nil> b = [101 97 100 101 114 33 32 82]
+b[:n] = "eader!"
+n = 0 err = EOF b = [101 97 100 101 114 33 32 82]
+b[:n] = ""
+	*/
+
 }
