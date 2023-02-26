@@ -1,7 +1,6 @@
 package main
 
 import "fmt"
-
 func main()  {
 	ch := make(chan string)
 	ss := []string{
@@ -11,6 +10,7 @@ func main()  {
 		"four",
 		"five",
 	}
+
 	for _, v := range ss {
 		go func(str string) {
 			ch <- str
