@@ -2,29 +2,25 @@ package main
 
 import "fmt"
 
-// Index returns the index of x in s, or -1 if not found.
-func Index[T comparable](s []T, x T) int {
-	for i, v := range s {
-		// v and x are type T, which has the comparable
-		// constraint, so we can use == here.
-		if v == x {
-			return i
-		}
+func main()  {
+	ch := make(chan string)
+	ss := []string{
+		"one",
+		"two",
+		"three",
+		"four",
+		"five",
 	}
-	return -1
-}
-// List represents a singly-linked list that holds
-// values of any type.
-type List[T any] struct {
-	next *List[T]
-	val  T
-}
-func main() {
-	// Index works on a slice of ints
-	si := []int{10, 20, 15, -10}
-	fmt.Println(Index(si, 15))
-
-	// Index also works on a slice of strings
-	ss := []string{"foo", "bar", "baz", "hello"}
-	fmt.Println(Index(ss, "hello"))
+	for _, v := range ss {
+		go func(str string) {
+			ch <- str
+			}(v)	
+	}
+	for i := 0; i < len(ss); i++ {
+		fmt.Println(<-ch)
+	}
+	c := make(chan int, 10)
+	for v := range c {  // why do you not need the index when working with channels 
+		fmt.Println(v)	
+	}
 }
