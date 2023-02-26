@@ -1,31 +1,26 @@
 package main
 
-import (
-	"fmt"
-
-	"io"
-	"strings"
-)
-
-func main() {
-	r := strings.NewReader("Hello, Reader!")
-	b := make([]byte, 8)
-	for {
-		n, err := r.Read(b)
-		fmt.Printf("n = %v err = %v b = %v\n", n, err, b)
-		fmt.Printf("b[:n] = %q\n", b[:n])
-		if err == io.EOF {
-			break
-		}
+import "fmt"
+func main()  {
+	ch := make(chan string)
+	ss := []string{
+		"one",
+		"two",
+		"three",
+		"four",
+		"five",
 	}
 
-	/* below is the result when ran 
-n = 8 err = <nil> b = [72 101 108 108 111 44 32 82]
-b[:n] = "Hello, R"
-n = 6 err = <nil> b = [101 97 100 101 114 33 32 82]
-b[:n] = "eader!"
-n = 0 err = EOF b = [101 97 100 101 114 33 32 82]
-b[:n] = ""
-	*/
-
+	for _, v := range ss {
+		go func(str string) {
+			ch <- str
+			}(v)	
+	}
+	for i := 0; i < len(ss); i++ {
+		fmt.Println(<-ch)
+	}
+	c := make(chan int, 10)
+	for v := range c {  // why do you not need the index when working with channels 
+		fmt.Println(v)	
+	}
 }
